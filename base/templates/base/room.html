@@ -7,7 +7,7 @@
     <div class="room">
       <div class="room__top">
         <div class="room__topLeft">
-          <a href="index.html">
+          <a href="{% url 'home' %}">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
               <title>arrow-left</title>
               <path
@@ -20,7 +20,7 @@
 
         {% if request.user.id == room.host.id %}
         <div class="room__topRight">
-          <a href="#">
+          <a href="{% url 'update-room' room.id %}">
             <svg
               enable-background="new 0 0 24 24"
               height="32"
@@ -46,7 +46,7 @@
               </g>
             </svg>
           </a>
-          <a href="#">
+          <a href="{% url 'delete-room' room.id %}">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
               <title>remove</title>
               <path
@@ -77,7 +77,7 @@
         <div class="room__header scroll">
           <div class="room__info">
             <h3>{{room.name}}</h3>
-            <span>{{room.created | timesince}}</span>
+            <span>{{room.created | timesince}} ago</span>
           </div>
           <div class="room__hosted">
             <p>Hosted By</p>
@@ -98,41 +98,41 @@
           <div class="threads scroll">
 
             {% for message in messages %}
-            <div class="thread">
-              <div class="thread__top">
-                <div class="thread__author">
-                  <a href="{% url 'user-profile' message.user.id %}" class="thread__authorInfo">
-                    <div class="avatar avatar--small">
-                      <img src="https://randomuser.me/api/portraits/men/37.jpg" />
-                    </div>
-                    <span>@{{message.user}}</span>
+              <div class="thread">
+                <div class="thread__top">
+                  <div class="thread__author">
+                    <a href="{% url 'user-profile' message.user.id %}" class="thread__authorInfo">
+                      <div class="avatar avatar--small">
+                        <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+                      </div>
+                      <span>@{{message.user}}</span>
+                    </a>
+                    <span class="thread__date">{{message.created | timesince}} ago</span>
+                  </div>
+                  {% if request.user.id == message.user.id %}
+                  <div class="thread__delete">
+                    <a href="{% url 'delete-message' message.id %}">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+                      <title>remove</title>
+                      <path
+                        d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
+                      ></path>
+                    </svg>
                   </a>
-                  <span class="thread__date">{{message.created | timesince}} ago</span>
+                  </div>
+                  {% endif %}
                 </div>
-                {% if request.user.id == message.user.id %}
-                <div class="thread__delete">
-                  <a href="{% url 'delete-message' message.id %}">
-                  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-                    <title>remove</title>
-                    <path
-                      d="M27.314 6.019l-1.333-1.333-9.98 9.981-9.981-9.981-1.333 1.333 9.981 9.981-9.981 9.98 1.333 1.333 9.981-9.98 9.98 9.98 1.333-1.333-9.98-9.98 9.98-9.981z"
-                    ></path>
-                  </svg>
-                </a>
+                <div class="thread__details">
+                  {{message}}
                 </div>
-                {% endif %}
               </div>
-              <div class="thread__details">
-                {{message}}
-              </div>
-            </div>
-
             {% endfor %}
 
 
           </div>
         </div>
       </div>
+
       {% if request.user.is_authenticated %}
       <div class="room__message">
         <form method="POST" action="">
