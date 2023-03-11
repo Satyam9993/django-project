@@ -25,14 +25,14 @@
     <nav class="header__menu">
       {% if not request.user.is_authenticated %}
       <a href="{% url 'login' %}">
-        <img src="{% static '/assets/avatar.svg' %}" />
+        <img src="{% static '/images/avatar.svg' %}" />
         <p>Login</p>
       </a>
       {% else %}
       <div class="header__user">
         <a href="{% url 'user-profile' request.user.id %}">
           <div class="avatar avatar--medium active">
-            <img src="https://randomuser.me/api/portraits/men/37.jpg" />
+            <img src="{{request.user.avatar.url}}" />
           </div>
           <p>
             {{request.user.username}} <span>@{{request.user.username}}</span>
